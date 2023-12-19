@@ -8,10 +8,8 @@ def get_nfts_by_collection():
         "accept": "application/json",
         "x-api-key": config.api_key
     }
-
+    
     response = requests.get(url, headers=headers)
-    
-    
 
     print(response.text)
     
