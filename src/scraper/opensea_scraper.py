@@ -2,7 +2,7 @@ import config
 import requests
 
 def get_nfts_by_collection():
-    collection_slug = input('Get the collection name from the Opeansea URL and paste here: ')
+    collection_slug = 'boredapeyachtclub'
     url = f"https://api.opensea.io/api/v2/collection/{collection_slug}/nfts"
     headers = {
         "accept": "application/json",
@@ -10,8 +10,14 @@ def get_nfts_by_collection():
     }
     
     response = requests.get(url, headers=headers)
-
-    print(response.text)
+    collection_data = response.json()
+    identifiers = []
+    
+    for nft in collection_data['nfts']:
+        identifier = nft['identifier']
+        identifiers.append(identifier)
+    print(identifiers)
+   
     
 def get_an_nft():
     #Value that need to be passed in are:
