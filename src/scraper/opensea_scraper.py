@@ -11,13 +11,16 @@ def get_nfts_by_collection():
     
     response = requests.get(url, headers=headers)
     collection_data = response.json()
-    identifiers = []
+    nft_data = []
     
     for nft in collection_data['nfts']:
         identifier = nft['identifier']
-        identifiers.append(identifier)
-    print(identifiers)
-   
+        address = nft['contract']
+        if int(identifier) <= 10000:
+            nft_data.append(identifier)
+            nft_data.append(address)
+    return(nft_data)
+    
     
 def get_an_nft():
     #Value that need to be passed in are:
@@ -36,4 +39,5 @@ def get_an_nft():
     print(response.text)
 
     
-get_nfts_by_collection()
+nft_data = get_nfts_by_collection()
+
