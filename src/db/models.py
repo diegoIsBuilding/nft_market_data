@@ -2,10 +2,10 @@ import config
 import psycopg2
 
 connection = psycopg2.connect(
-    hostname = config.hostname,
-    db = config.database,
+    host = config.hostname,
+    dbname = config.database,
     user = config.username,
-    pwd = config.password,
+    password = config.password,
     port = config.port    
 )
 
