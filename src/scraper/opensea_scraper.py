@@ -15,35 +15,23 @@ def get_nfts_by_collection():
     
     for nft in collection_data['nfts']:
         identifier = nft['identifier']
-        address = nft['contract']
+        contract = nft['contract']
+        token_standard = nft['token_standard']
+        image_url = nft['image_url']
+        metadata_url = nft['metadata_url']
+        opensea_url = nft['opensea_url']
+        
         if int(identifier) <= 10000:
             nft_data.append({
               'identifer': identifier,
-              'contract': address 
+              'contract': contract,
+              'token_standard': token_standard,
+              'image_url': image_url,
+              'metadata_url': metadata_url,
+              'opensea_url': opensea_url
             })
     return(nft_data)
     
     
-def get_an_nft(nft_data):
-    #Value that need to be passed in are:
-        #Identifier: the number must be less than 10000
-        #Contract: passed in as 'address' in API url
-        #chain: passed in as 'arbitrum' 
-    chain = 'arbitrum'
-    headers = {
-        "accept": "application/json",
-        "x-api-key": config.api_key
-    }
-    for nft in nft_data:
-        identifier = nft['identifer']
-        address = nft['contract']
-        
-        if int(identifier) <= 10000:
-            url = f"https://api.opensea.io/api/v2/chain/{chain}/contract/{address}/nfts/{identifier}"
-            response = requests.get(url, headers=headers)
-            print(response.text)
-
-    
-nft_data = get_nfts_by_collection()
-print(nft_data)
+print(get_nfts_by_collection())
 
