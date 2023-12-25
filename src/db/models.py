@@ -17,6 +17,12 @@ try:
 
     cursor = connection.cursor()
     
+    nft_data_table_script = ''' CREATE TABLE NFT_DATA (
+        
+    )
+    
+    '''
+    
 except Exception as error:
     print(error)
     
