@@ -12,7 +12,7 @@ try:
         collection_slug = 'boredapeyachtclub'
         next_set = ''
         url = f"https://api.opensea.io/api/v2/collection/{collection_slug}/nfts"
-        # url = "https://api.opensea.io/api/v2/collection/boredapeyachtclub/nfts?limit=200&next=LXBrPTIzMTQzNzAz"
+        ## url = "https://api.opensea.io/api/v2/collection/boredapeyachtclub/nfts?limit=200&next=LXBrPTIzMTQzNzAz"
         headers = {
             "accept": "application/json",
             "x-api-key": config.api_key
