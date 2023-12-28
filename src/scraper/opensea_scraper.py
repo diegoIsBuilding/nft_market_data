@@ -4,11 +4,8 @@ import requests
 import time
 import random
 import json
-
-
-try: 
     
-    def get_nfts_by_collection(next_cursor=None):
+def get_nfts_by_collection(next_cursor=None):
         collection_slug = 'boredapeyachtclub'
         url = f"https://api.opensea.io/api/v2/collection/{collection_slug}/nfts"
         ## url = "https://api.opensea.io/api/v2/collection/boredapeyachtclub/nfts?limit=200&next=LXBrPTIzMTQzNzAz"
@@ -36,31 +33,54 @@ try:
                 
         next_set = collection_data.get('next', None)
         return(nft_data, next_set)
-   
         
-    def get_an_nft(identifier, address):
+def get_an_nft(identifier, address):
         #Value that need to be passed in are:
             #Identifier: the number must be less than 10000
             #Contract: passed in as 'address' in API url
             #chain: passed in as 'ethereum' 
-        chain = 'ethereum'
-        headers = {
-            "accept": "application/json",
-            "x-api-key": config.api_key
-        }
+            
+    chain = 'ethereum'
+    url = f"https://api.opensea.io/api/v2/chain/{chain}/contract/{address}/nfts/{identifier}"
+    headers = {
+        "accept": "application/json",
+        "x-api-key": config.api_key
+    }
         
+    response = requests.get(url, headers=headers)
+    nft = response.json().get('nft', {})
+    nft_info = {
+            'collection': nft.get('collection', ''),
+            'image_url': nft.get('image_url', ''),
+            'metadata_url': nft.get('metadata_url', ''),
+            'opensea_url': nft.get('opensea_url', ''),
+            'creator': nft.get('creator', ''),
+            'traits': [],
+            'owners': []
+        }
+    for traits in nft.get('traits', []):
+        nft_info['traits'].append({
+            'trait_type': traits.get('trait_type', ''),
+            'trait_count': traits.get('trait_count', 0),
+            'value': traits.get('value', '')
+    })
+            
+    for owner in nft.get('owners', []):
+        nft_info['owners'].append({
+            'owner_address': owner.get('address', ''),
+            'quantity': owner.get('quantity', 0)
+    })
 
-        if int(identifier) <= 10000:
-            url = f"https://api.opensea.io/api/v2/chain/{chain}/contract/{address}/nfts/{identifier}"
-            response = requests.get(url, headers=headers)
-            nft_data = response.json()
-            for nft in nft_data['nft']:
-                collection = nft['collection']
-                image_url = nft
-                
-            time.sleep(5)
-            print(response.text)
-                
+        time.sleep(5)  # Wait for 5 seconds to prevent rate limiting
+        print(nft_info)
+        return(nft_info)
+
+try:
+    
+    nft_data, next_set = get_nfts_by_collection()
+    for nft in nft_data:
+        get_an_nft(nft['identifier'], nft['contract'])
+    
 #Works with the try block
 except requests.ConnectionError:
     print('Failed to connect to website')
@@ -71,7 +91,4 @@ except requests.RequestException as e:
 except Exception as e:
     print(f'An unexpected error occurred: {e}')
 
-nft_data, next_set = get_nfts_by_collection()
-for nft in nft_data:
-    get_an_nft(nft['identifier'], nft['contract'])
 
