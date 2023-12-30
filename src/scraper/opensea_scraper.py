@@ -8,14 +8,13 @@ import json
 def get_nfts_by_collection(next_cursor=None):
         collection_slug = 'boredapeyachtclub'
         url = f"https://api.opensea.io/api/v2/collection/{collection_slug}/nfts"
-        ## url = "https://api.opensea.io/api/v2/collection/boredapeyachtclub/nfts?limit=200&next=LXBrPTIzMTQzNzAz"
         
         if next_cursor:
             url += f'?next={next_cursor}'
         
         headers = {
             "accept": "application/json",
-            "x-api-key": config.api_key
+            "x-api-key": config.opensea_api_key
         }
         
         response = requests.get(url, headers=headers)
@@ -35,16 +34,12 @@ def get_nfts_by_collection(next_cursor=None):
         return(nft_data, next_set)
         
 def get_an_nft(identifier, address):
-        #Value that need to be passed in are:
-            #Identifier: the number must be less than 10000
-            #Contract: passed in as 'address' in API url
-            #chain: passed in as 'ethereum' 
             
     chain = 'ethereum'
     url = f"https://api.opensea.io/api/v2/chain/{chain}/contract/{address}/nfts/{identifier}"
     headers = {
         "accept": "application/json",
-        "x-api-key": config.api_key
+        "x-api-key": config.opensea_api_key
     }
         
     response = requests.get(url, headers=headers)
@@ -80,8 +75,7 @@ try:
     nft_data, next_set = get_nfts_by_collection()
     for nft in nft_data:
         get_an_nft(nft['identifier'], nft['contract'])
-    
-#Works with the try block
+
 except requests.ConnectionError:
     print('Failed to connect to website')
 except requests.Timeout:
